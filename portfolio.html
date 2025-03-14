@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body { font-family: 'Poppins', sans-serif; margin: 0; padding: 0; background: linear-gradient(to right, #ffafbd, #ffc3a0); color: #333; }
+        header { background: #222; color: white; padding: 1.5rem; text-align: center; font-size: 1.8rem; }
+        .container { width: 80%; margin: auto; padding: 30px; }
+        .profile { text-align: center; }
+        .profile img { width: 150px; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
+        .profile h2 { margin-top: 10px; font-size: 1.8rem; }
+        .profile p { font-size: 1.2rem; color: #555; }
+        .projects { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .project { background: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1); transition: all 0.3s ease-in-out; }
+        .project:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        button { background: #ff6f61; color: white; border: none; padding: 10px 15px; cursor: pointer; font-size: 1rem; border-radius: 5px; transition: 0.3s; }
+        button:hover { background: #e65c50; transform: scale(1.05); }
+        .contact { margin-top: 40px; text-align: center; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .contact p { font-size: 1.2rem; }
+        .contact a { color: #ff6f61; text-decoration: none; font-weight: bold; }
+        .contact a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+    </header>
+    <div class="container">
+        <section class="profile">
+            <img src="profile.jpg" alt="Profile Picture">
+            <h2>VIJAY RAMESH</h2>
+            <p>Web Developer | Designer | Coder</p>
+            <p>Passionate about creating modern, responsive, and user-friendly websites.</p>
+        </section>
+        <section class="projects">
+            <div class="project">
+                <h3>Project 1</h3>
+                <p>Description of your project.</p>
+                <button onclick="showAlert('Project 1')">View More</button>
+            </div>
+            <div class="project">
+                <h3>Project 2</h3>
+                <p>Description of your project.</p>
+                <button onclick="showAlert('Project 2')">View More</button>
+            </div>
+            <div class="project">
+                <h3>Project 3</h3>
+                <p>Description of another project.</p>
+                <button onclick="showAlert('Project 3')">View More</button>
+            </div>
+        </section>
+        <section class="contact">
+            <h2>Contact Me</h2>
+            <p>Email: <a href="mailto:vijayramesh26301@gmail.com">vijayramesh26301@gmail.com</a></p>
+            <p>LinkedIn: <a href="https://www.linkedin.com/in/vijay-ramesh-7ab042212/" target="_blank">linkedin.com/in/vijay-ramesh-7ab042212/</a></p>
+            <p>GitHub: <a href="https://github.com/Vijayramesh26/" target="_blank">github.com/Vijayramesh26</a></p>
+        </section>
+    </div>
+    <script>
+        function showAlert(projectName) {
+            alert('You clicked on ' + projectName);
+        }
+    </script>
+</body>
+</html>
