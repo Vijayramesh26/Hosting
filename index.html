@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vijay Ramesh • Full Stack Developer</title>
+  <meta name="description" content="Vijay Ramesh — Full Stack Developer (Vue/Nuxt, Go, Java). FinTech enthusiast." />
+  <style>
+    :root {
+      --bg: #000;
+      --fg: #d9f99d;         /* soft lime */
+      --neon: #00ff88;       /* neon green */
+      --neon-2: #00ff00;     /* matrix green */
+      --card: rgba(0,0,0,0.55);
+      --border: rgba(0,255,136,0.25);
+      --shadow: 0 10px 30px rgba(0,255,136,0.08), inset 0 0 0 1px var(--border);
+    }
+
+    /* Reset / base */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 15px/1.6 "Inter", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Fira Code", monospace;
+      color: var(--fg);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* Matrix background canvas */
+    canvas#matrix {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+    }
+
+    /* Subtle radial vignette to add depth above the canvas */
+    .vignette {
+      position: fixed;
+      inset: -20%;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at center, rgba(0,255,136,0.08) 0%, rgba(0,0,0,0.0) 45%),
+        radial-gradient(ellipse at top, rgba(0,255,0,0.06) 0%, rgba(0,0,0,0.0) 40%);
+      z-index: -1;
+      filter: blur(10px);
+    }
+
+    /* Layout */
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 18px 80px;
+    }
+
+    header {
+      display: grid;
+      place-items: center;
+      gap: 14px;
+      padding: 40px 0 10px;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(28px, 3.5vw, 44px);
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 18px rgba(0,255,136,0.25);
+    }
+
+    .badgebar {
+      display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; align-items: center;
+      margin-top: 8px;
+    }
+
+    .section {
+      margin-top: 28px;
+      padding: 18px;
+      background: var(--card);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(4px);
+    }
+
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      letter-spacing: 0.4px;
+      color: var(--fg);
+      text-shadow: 0 0 12px rgba(0,255,136,0.25);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 14px;
+    }
+    @media (max-width: 750px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    .stack-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+    /* Centered image rows */
+    .img-row {
+      display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+
+    /* Cards specifically for images (stats/trophies) */
+    .img-card {
+      background: rgba(0,0,0,0.35);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      padding: 12px;
+    }
+
+    /* Link buttons */
+    .links {
+      display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+      margin-top: 10px;
+    }
+    .btn {
+      --glow: drop-shadow(0 0 10px rgba(0,255,136,0.45));
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(0,255,136,0.12), rgba(0,0,0,0.1));
+      color: var(--fg);
+      text-decoration: none;
+      filter: var(--glow);
+      transition: transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+    }
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(0,255,136,0.5);
+      box-shadow: 0 8px 28px rgba(0,255,136,0.18);
+    }
+
+    /* Small caption */
+    .caption { opacity: 0.8; font-size: 13px; }
+
+    /* Nice divider */
+    .divider {
+      margin: 28px auto 10px;
+      height: 1px; width: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0,255,136,0.35), transparent);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      opacity: 0.9;
+      margin-top: 22px;
+      font-size: 14px;
+    }
+
+    /* Hide images until loaded (prevents layout flash) */
+    img[data-fade] { opacity: 0; transition: opacity .4s ease; }
+    img[data-fade].ready { opacity: 1; }
+  </style>
+</head>
+<body>
+  <!-- Matrix animated background -->
+  <canvas id="matrix"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header>
+      <!-- Typing headline -->
+      <img
+        data-fade
+        alt="Typing Intro"
+        src="https://readme-typing-svg.demolab.com?font=Roboto+Mono&weight=700&size=24&pause=1100&color=00FF00&center=true&vCenter=true&width=720&lines=Hi,+I'm+Vijay+Ramesh;Full+Stack+Developer;Turning+Ideas+Into+Code;FinTech+%26+Beyond;Always+Learning+New+Tech"
+      />
+      <h1>Vijay Ramesh</h1>
+      <div class="badgebar">
+        <img data-fade class="img-card" alt="Profile Views"
+             src="https://komarev.com/ghpvc/?username=Vijayramesh26&label=Profile%20Views&color=00ff88&style=for-the-badge" />
+      </div>
+      <div class="links">
+        <a class="btn" href="https://www.linkedin.com/in/vijay-ramesh-7ab042212" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn" href="https://rameshvijay-portfolio.web.app/" target="_blank" rel="noopener">Portfolio</a>
+        <a class="btn" href="mailto:vijayramesh26301@gmail.com" target="_blank" rel="noopener">Email</a>
+      </div>
+    </header>
+
+    <div class="divider"></div>
+
+    <!-- Tech Arsenal -->
+    <section class="section" id="tech">
+      <h2>🛠 Tech Arsenal</h2>
+      <div class="grid">
+        <div class="section">
+          <h3>Frontend</h3>
+          <div class="stack-row img-row">
+            <img data-fade src="https://skillicons.dev/icons?i=nuxt" height="48" alt="Nuxt.js" />
+            <img data-fade src="https://skillicons.dev/icons?i=vue" height="48" alt="Vue.js" />
+            <img data-fade src="https://skillicons.dev/icons?i=vuetify" height="48" alt="Vuetify" />
+            <img data-fade src="https://skillicons.dev/icons?i=flutter" height="48" alt="Flutter (Basics)" />
+          </div>
+          <p class="caption">Nuxt.js · Vue.js · Vuetify · Flutter (Basics)</p>
+        </div>
+
+        <div class="section">
+          <h3>Backend</h3>
+          <div class="stack-row img-row">
+            <img data-fade src="https://skillicons.dev/icons?i=go" height="48" alt="Go" />
+            <img data-fade src="https://skillicons.dev/icons?i=java" height="48" alt="Java" />
+          </div>
+          <p class="caption">Go · Java</p>
+        </div>
+
+        <div class="section">
+          <h3>Databases</h3>
+          <div class="stack-row img-row">
+            <img data-fade src="https://skillicons.dev/icons?i=mysql" height="48" alt="MariaDB/MySQL" />
+            <img data-fade src="https://img.shields.io/badge/GORM-ORM-blue?style=for-the-badge&logo=go&logoColor=white" height="28" alt="GORM" />
+            <img data-fade src="https://img.shields.io/badge/MS%20SQL-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" height="28" alt="MS SQL" />
+          </div>
+          <p class="caption">GORM · MariaDB (MySQL) · MS SQL</p>
+        </div>
+
+        <div class="section">
+          <h3>Tools & DevOps</h3>
+          <div class="stack-row img-row">
+            <img data-fade src="https://skillicons.dev/icons?i=git" height="48" alt="Git" />
+            <img data-fade src="https://skillicons.dev/icons?i=github" height="48" alt="GitHub" />
+            <img data-fade src="https://skillicons.dev/icons?i=postman" height="48" alt="Postman" />
+            <img data-fade src="https://skillicons.dev/icons?i=figma" height="48" alt="Figma" />
+            <img data-fade src="https://skillicons.dev/icons?i=docker" height="48" alt="Docker (Basics)" />
+          </div>
+          <p class="caption">Git · GitHub · Postman · Figma · Docker (Basics)</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GitHub Analytics -->
+    <section class="section" id="stats">
+      <h2>📊 GitHub Analytics</h2>
+      <div class="img-row">
+        <img data-fade class="img-card" alt="Stats"
+             src="https://github-readme-stats.vercel.app/api?username=Vijayramesh26&show_icons=true&theme=tokyonight&hide_border=true" />
+        <img data-fade class="img-card" alt="Streak"
+             src="https://github-readme-streak-stats.herokuapp.com/?user=Vijayramesh26&theme=tokyonight&hide_border=true" />
+      </div>
+      <div class="img-row" style="margin-top:12px">
+        <img data-fade class="img-card" alt="Top Languages"
+             src="https://github-readme-stats.vercel.app/api/top-langs/?username=Vijayramesh26&layout=compact&theme=tokyonight&hide_border=true" />
+      </div>
+    </section>
+
+    <!-- Achievements -->
+    <section class="section" id="trophies">
+      <h2>🏆 Achievements</h2>
+      <div class="img-row">
+        <img data-fade class="img-card" alt="Trophies"
+             src="https://github-profile-trophy.vercel.app/?username=Vijayramesh26&theme=algolia&no-frame=true&row=1&column=6&margin-w=10" />
+      </div>
+    </section>
+
+    <!-- Snake -->
+    <section class="section" id="snake">
+      <h2>🐍 Contribution Snake</h2>
+      <div class="img-row">
+        <img data-fade class="img-card" alt="Contribution Snake"
+             src="https://github.com/Vijayramesh26/Vijayramesh26/blob/output/github-contribution-grid-snake.svg" />
+      </div>
+      <p class="caption" style="text-align:center">
+        If this doesn’t show, ensure your <code>snake.yml</code> workflow generates the SVG to the <code>output</code> branch.
+      </p>
+    </section>
+
+    <footer>
+      ✨ “First, solve the problem. Then, write the code.”
+    </footer>
+  </div>
+
+  <script>
+    // Fade-in images when loaded
+    document.querySelectorAll('img[data-fade]').forEach(img => {
+      if (img.complete) img.classList.add('ready');
+      else img.addEventListener('load', () => img.classList.add('ready'));
+    });
+
+    // Matrix Effect
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+    const setSize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+    setSize(); addEventListener("resize", setSize);
+
+    const letters = "アァイィウヴエェオカガキギクグケゲコゴサザシジスズセゼソゾタダチッヂヅテデトドナニヌネノハバパヒビピフブプヘベペホボポマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    const glyphs = letters.split("");
+    const fontSize = 16;
+    let columns = Math.floor(canvas.width / fontSize);
+    let drops = Array.from({ length: columns }, () => Math.floor(Math.random() * 50));
+
+    function draw() {
+      // trail
+      ctx.fillStyle = "rgba(0, 0, 0, 0.06)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#00ff00";
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = glyphs[Math.floor(Math.random() * glyphs.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        ctx.fillText(text, x, y);
+
+        if (y > canvas.height && Math.random() > 0.975) drops[i] = 0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 33);
+
+    // Recompute columns/drops on resize
+    addEventListener("resize", () => {
+      columns = Math.floor(canvas.width / fontSize);
+      drops = Array.from({ length: columns }, () => Math.floor(Math.random() * 50));
+    });
+  </script>
+</body>
+</html>
